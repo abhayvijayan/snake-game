@@ -6,9 +6,14 @@ public class GamePanel extends JPanel {
     static final int SCREEN_WIDTH = 600;
     static final int SCREEN_HEIGHT = 600;
     static final int UNIT_SIZE = 25;
+    static final int GAME_UNIT = (int)(SCREEN_HEIGHT*SCREEN_WIDTH)/UNIT_SIZE;
     int appleX;
     int appleY;
     Random random;
+    static final int bodyParts = 0;
+    char direction = 'R';
+    final int[] x = new int[GAME_UNIT];
+    final int[] y = new int[GAME_UNIT];
 
     GamePanel() {
         random = new Random();
@@ -20,6 +25,7 @@ public class GamePanel extends JPanel {
 
     void startGame() {
         generateApple();
+        snakeMovement();
     }
 
     public void paintComponent(Graphics g) {
@@ -40,5 +46,9 @@ public class GamePanel extends JPanel {
     public void generateApple() {
         appleX = (random.nextInt((int)SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
         appleY = (random.nextInt((int)SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
+    }
+
+    public void snakeMovement() {
+
     }
 }
