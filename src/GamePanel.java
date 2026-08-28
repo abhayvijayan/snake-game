@@ -26,13 +26,30 @@ public class GamePanel extends JPanel implements KeyListener {
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(this);
-        timer = new Timer(DELAY, e -> snakeMovement());
-        gameLoop();
+
+        initializeGame();
+
+        timer = new Timer(DELAY, e -> gameLoop());
+        timer.start();
     }
 
-    public void gameLoop() {
-        timer.start();
-        startGame();
+    void initializeGame() {
+        generateApple();
+
+        for (int i = 0; i < bodyParts; i++) {
+            x[i] = (bodyParts - i - 1) * UNIT_SIZE;
+            y[i] = 0;
+        }
+    }
+
+    void gameLoop() {
+        snakeMovement();
+        checkCollision();
+    }
+
+    void gameOver() {
+        timer.stop();
+        System.out.println("GAME OVER");
     }
 
     void startGame() {
@@ -73,6 +90,8 @@ public class GamePanel extends JPanel implements KeyListener {
         appleY = (random.nextInt((int)SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
     }
 
+
+
     public void snakeMovement() {
 
         // Move body segments
@@ -105,6 +124,21 @@ public class GamePanel extends JPanel implements KeyListener {
 
     void checkCollision() {
 
+        // Wall collision
+        if (x[0] < 0 ||
+                x[0] >= SCREEN_WIDTH ||
+                y[0] < 0 ||
+                y[0] >= SCREEN_HEIGHT) {
+
+            gameOver();
+        }
+
+        // Self collision
+        for (int i = 1; i < bodyParts; i++) {
+            if (x[0] == x[i] && y[0] == y[i]) {
+                gameOver();
+            }
+        }
     }
 
     @Override
@@ -115,7 +149,7 @@ public class GamePanel extends JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            System.out.println("hjh");
+            direction = 'L';
         }
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
