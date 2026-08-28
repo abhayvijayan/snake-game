@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
@@ -42,6 +41,7 @@ public class GamePanel extends JPanel implements KeyListener {
         timer.start();
     }
 
+    // GAME INIT FUNCTION
     void initializeGame() {
         generateApple();
 
@@ -51,12 +51,14 @@ public class GamePanel extends JPanel implements KeyListener {
         }
     }
 
+    // MAIN GAME LOOP
     void gameLoop() {
         snakeMovement();
         checkCollision();
         repaint();
     }
 
+    // GAME OVER
     void gameOver() {
         timer.stop();
         running = false;
@@ -65,6 +67,7 @@ public class GamePanel extends JPanel implements KeyListener {
         repaint();
     }
 
+    // RESTART GAME
     void restartGame() {
         bodyParts = 3;
         direction = 'R';
@@ -81,11 +84,13 @@ public class GamePanel extends JPanel implements KeyListener {
         repaint();
     }
 
+    // COMPONENT PAINTER FOR GRAPHICS
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         draw(g);
     }
 
+    // DRAW FUNCTION FOR GRAPHICS ELEMENTS
     public void draw(Graphics g) {
         if (running) {
             // GRID
@@ -101,9 +106,8 @@ public class GamePanel extends JPanel implements KeyListener {
             g.setColor(Color.red);
             g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
 
-            // Snake
+            // SNAKE
             g.setColor(Color.green);
-
             for (int i = 0; i < bodyParts; i++) {
                 if (i == 0) {
                     g.setColor(Color.GREEN);
@@ -127,22 +131,22 @@ public class GamePanel extends JPanel implements KeyListener {
         }
     }
 
-
+    // APPLE COORDINATES GENERATION
     public void generateApple() {
         appleX = (random.nextInt((int)SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
         appleY = (random.nextInt((int)SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
     }
 
-
+    // SNAKE MOVEMENT
     public void snakeMovement() {
 
-        // Move body segments
+        // MOVE BODY PARTS
         for (int i = bodyParts - 1; i > 0; i--) {
             x[i] = x[i - 1];
             y[i] = y[i - 1];
         }
 
-        // Move head
+        // MOVE HEAD
         switch (direction) {
             case 'R':
                 x[0] = x[0] + UNIT_SIZE;
@@ -162,9 +166,10 @@ public class GamePanel extends JPanel implements KeyListener {
         }
     }
 
+    // COLLISION CHECKER
     void checkCollision() {
 
-        // Wall collision
+        // WALL COLLISION
         if (x[0] < 0 ||
                 x[0] >= SCREEN_WIDTH ||
                 y[0] < 0 ||
@@ -173,14 +178,14 @@ public class GamePanel extends JPanel implements KeyListener {
             gameOver();
         }
 
-        // Self collision
+        // SELF COLLISION
         for (int i = 1; i < bodyParts; i++) {
             if (x[0] == x[i] && y[0] == y[i]) {
                 gameOver();
             }
         }
 
-        // Food collision
+        // FOOD COLLISION
         if (x[0] == appleX && y[0] == appleY) {
 
             x[bodyParts] = x[bodyParts - 1];
@@ -193,11 +198,7 @@ public class GamePanel extends JPanel implements KeyListener {
         }
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // DO NOTHING
-    }
-
+    // KEYBOARD INPUT HANDLER
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -219,6 +220,10 @@ public class GamePanel extends JPanel implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+        // DO NOTHING
+    }
+    @Override
+    public void keyTyped(KeyEvent e) {
         // DO NOTHING
     }
 }
