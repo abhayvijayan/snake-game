@@ -10,7 +10,7 @@ public class GamePanel extends JPanel implements KeyListener {
     static final int SCREEN_HEIGHT = 600;
     static final int UNIT_SIZE = 25;
     static final int GAME_UNIT = (int)(SCREEN_HEIGHT*SCREEN_WIDTH)/UNIT_SIZE;
-    static final int DELAY = 50;
+    static final int DELAY = 80;
     int appleX;
     int appleY;
     Random random;
@@ -26,7 +26,7 @@ public class GamePanel extends JPanel implements KeyListener {
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(this);
-        timer = new Timer(DELAY, null);
+        timer = new Timer(DELAY, e -> snakeMovement());
         gameLoop();
     }
 
@@ -46,13 +46,26 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     public void draw(Graphics g) {
+
+        // Grid
         for (int i = 0; i <= UNIT_SIZE; i++) {
-            g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
-            g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE);
+            g.drawLine(i * UNIT_SIZE, 0,
+                    i * UNIT_SIZE, SCREEN_HEIGHT);
+
+            g.drawLine(0, i * UNIT_SIZE,
+                    SCREEN_WIDTH, i * UNIT_SIZE);
         }
 
+        // Apple
         g.setColor(Color.red);
         g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
+
+        // Snake
+        g.setColor(Color.green);
+
+        for (int i = 0; i < bodyParts; i++) {
+            g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+        }
     }
 
     public void generateApple() {
@@ -61,11 +74,33 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     public void snakeMovement() {
-        switch (direction) {
-            case 'R' : {
 
-            }
+        // Move body segments
+        for (int i = bodyParts - 1; i > 0; i--) {
+            x[i] = x[i - 1];
+            y[i] = y[i - 1];
         }
+
+        // Move head
+        switch (direction) {
+            case 'R':
+                x[0] = x[0] + UNIT_SIZE;
+                break;
+
+            case 'L':
+                x[0] = x[0] - UNIT_SIZE;
+                break;
+
+            case 'U':
+                y[0] = y[0] - UNIT_SIZE;
+                break;
+
+            case 'D':
+                y[0] = y[0] + UNIT_SIZE;
+                break;
+        }
+
+        repaint();
     }
 
     void checkCollision() {
@@ -80,7 +115,7 @@ public class GamePanel extends JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            direction = 'L';
+            System.out.println("hjh");
         }
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
