@@ -1,4 +1,4 @@
-# 🐍 Snake Game
+# SNAKE GAME
 
 A simple Snake game built using Java Swing.
 
@@ -35,4 +35,5 @@ A simple Snake game built using Java Swing.
 
 ## Screenshot
 
-_Add a screenshot of the game here._
+<img src="/images/image1.png" />
+<img src="/images/image2.png" />
