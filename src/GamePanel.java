@@ -1,16 +1,21 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Random;
 
-public class GamePanel extends JPanel {
+public class GamePanel extends JPanel implements KeyListener {
     static final int SCREEN_WIDTH = 600;
     static final int SCREEN_HEIGHT = 600;
     static final int UNIT_SIZE = 25;
     static final int GAME_UNIT = (int)(SCREEN_HEIGHT*SCREEN_WIDTH)/UNIT_SIZE;
+    static final int DELAY = 50;
     int appleX;
     int appleY;
     Random random;
-    static final int bodyParts = 0;
+    Timer timer;
+    static final int bodyParts = 6;
     char direction = 'R';
     final int[] x = new int[GAME_UNIT];
     final int[] y = new int[GAME_UNIT];
@@ -20,6 +25,13 @@ public class GamePanel extends JPanel {
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
+        this.addKeyListener(this);
+        timer = new Timer(DELAY, null);
+        gameLoop();
+    }
+
+    public void gameLoop() {
+        timer.start();
         startGame();
     }
 
@@ -49,6 +61,43 @@ public class GamePanel extends JPanel {
     }
 
     public void snakeMovement() {
+        switch (direction) {
+            case 'R' : {
 
+            }
+        }
+    }
+
+    void checkCollision() {
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // DO NOTHING
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            direction = 'L';
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            direction = 'R';
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            direction = 'U';
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            direction = 'D';
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        // DO NOTHING
     }
 }
