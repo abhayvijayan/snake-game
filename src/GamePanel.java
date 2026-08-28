@@ -18,6 +18,7 @@ public class GamePanel extends JPanel implements KeyListener {
     Timer timer;
     JButton restartButton;
     int bodyParts = 3;
+    int score = 0;
     char direction = 'R';
     final int[] x = new int[GAME_UNIT];
     final int[] y = new int[GAME_UNIT];
@@ -67,6 +68,7 @@ public class GamePanel extends JPanel implements KeyListener {
     void restartGame() {
         bodyParts = 3;
         direction = 'R';
+        score = 0;
 
         initializeGame();
 
@@ -85,18 +87,17 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     public void draw(Graphics g) {
-
-        // Grid
         if (running) {
-            for (int i = 0; i <= UNIT_SIZE; i++) {
-                g.drawLine(i * UNIT_SIZE, 0,
-                        i * UNIT_SIZE, SCREEN_HEIGHT);
+            // GRID
+//            for (int i = 0; i <= UNIT_SIZE; i++) {
+//                g.drawLine(i * UNIT_SIZE, 0,
+//                        i * UNIT_SIZE, SCREEN_HEIGHT);
+//
+//                g.drawLine(0, i * UNIT_SIZE,
+//                        SCREEN_WIDTH, i * UNIT_SIZE);
+//            }
 
-                g.drawLine(0, i * UNIT_SIZE,
-                        SCREEN_WIDTH, i * UNIT_SIZE);
-            }
-
-            // Apple
+            // APPLE
             g.setColor(Color.red);
             g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
 
@@ -112,6 +113,11 @@ public class GamePanel extends JPanel implements KeyListener {
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
+
+            // DISPLAY SCORE
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.BOLD, 25));
+            g.drawString("Score: " + score, 10, 25);
         } else {
             // GAME OVER SCREEN
             this.setBackground(Color.BLACK);
@@ -122,12 +128,10 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
 
-
     public void generateApple() {
         appleX = (random.nextInt((int)SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
         appleY = (random.nextInt((int)SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
     }
-
 
 
     public void snakeMovement() {
@@ -156,8 +160,6 @@ public class GamePanel extends JPanel implements KeyListener {
                 y[0] = y[0] + UNIT_SIZE;
                 break;
         }
-
-//        repaint();
     }
 
     void checkCollision() {
@@ -185,6 +187,7 @@ public class GamePanel extends JPanel implements KeyListener {
             y[bodyParts] = y[bodyParts - 1];
 
             bodyParts++;
+            score++;
 
             generateApple();
         }
