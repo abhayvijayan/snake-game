@@ -15,7 +15,7 @@ public class GamePanel extends JPanel implements KeyListener {
     int appleY;
     Random random;
     Timer timer;
-    static final int bodyParts = 6;
+    static final int bodyParts = 3;
     char direction = 'R';
     final int[] x = new int[GAME_UNIT];
     final int[] y = new int[GAME_UNIT];
@@ -52,11 +52,6 @@ public class GamePanel extends JPanel implements KeyListener {
         System.out.println("GAME OVER");
     }
 
-    void startGame() {
-        generateApple();
-        snakeMovement();
-    }
-
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         draw(g);
@@ -81,7 +76,13 @@ public class GamePanel extends JPanel implements KeyListener {
         g.setColor(Color.green);
 
         for (int i = 0; i < bodyParts; i++) {
-            g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            if(i == 0) {
+                g.setColor(Color.GREEN);
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            } else {
+                g.setColor(new Color(9, 219, 135));
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            }
         }
     }
 
