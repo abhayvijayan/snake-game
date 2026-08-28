@@ -13,9 +13,11 @@ public class GamePanel extends JPanel implements KeyListener {
     static final int DELAY = 80;
     int appleX;
     int appleY;
+    boolean running = false;
     Random random;
     Timer timer;
-    static final int bodyParts = 3;
+    JButton restartButton;
+    int bodyParts = 3;
     char direction = 'R';
     final int[] x = new int[GAME_UNIT];
     final int[] y = new int[GAME_UNIT];
@@ -27,9 +29,15 @@ public class GamePanel extends JPanel implements KeyListener {
         this.setFocusable(true);
         this.addKeyListener(this);
 
+        restartButton = new JButton("Restart Game");
+        restartButton.setVisible(false);
+        restartButton.addActionListener(e -> restartGame());
+        this.add(restartButton);
+
         initializeGame();
 
         timer = new Timer(DELAY, e -> gameLoop());
+        running = true;
         timer.start();
     }
 
@@ -45,11 +53,30 @@ public class GamePanel extends JPanel implements KeyListener {
     void gameLoop() {
         snakeMovement();
         checkCollision();
+        repaint();
     }
 
     void gameOver() {
         timer.stop();
-        System.out.println("GAME OVER");
+        running = false;
+
+        restartButton.setVisible(true);
+        repaint();
+    }
+
+    void restartGame() {
+        bodyParts = 3;
+        direction = 'R';
+
+        initializeGame();
+
+        running = true;
+        restartButton.setVisible(false);
+
+        timer.start();
+
+        requestFocusInWindow();
+        repaint();
     }
 
     public void paintComponent(Graphics g) {
@@ -60,31 +87,41 @@ public class GamePanel extends JPanel implements KeyListener {
     public void draw(Graphics g) {
 
         // Grid
-        for (int i = 0; i <= UNIT_SIZE; i++) {
-            g.drawLine(i * UNIT_SIZE, 0,
-                    i * UNIT_SIZE, SCREEN_HEIGHT);
+        if (running) {
+            for (int i = 0; i <= UNIT_SIZE; i++) {
+                g.drawLine(i * UNIT_SIZE, 0,
+                        i * UNIT_SIZE, SCREEN_HEIGHT);
 
-            g.drawLine(0, i * UNIT_SIZE,
-                    SCREEN_WIDTH, i * UNIT_SIZE);
-        }
-
-        // Apple
-        g.setColor(Color.red);
-        g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
-
-        // Snake
-        g.setColor(Color.green);
-
-        for (int i = 0; i < bodyParts; i++) {
-            if(i == 0) {
-                g.setColor(Color.GREEN);
-                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
-            } else {
-                g.setColor(new Color(9, 219, 135));
-                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                g.drawLine(0, i * UNIT_SIZE,
+                        SCREEN_WIDTH, i * UNIT_SIZE);
             }
+
+            // Apple
+            g.setColor(Color.red);
+            g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
+
+            // Snake
+            g.setColor(Color.green);
+
+            for (int i = 0; i < bodyParts; i++) {
+                if (i == 0) {
+                    g.setColor(Color.GREEN);
+                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                } else {
+                    g.setColor(new Color(9, 219, 135));
+                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                }
+            }
+        } else {
+            // GAME OVER SCREEN
+            this.setBackground(Color.BLACK);
+            g.setFont(new Font("Arial", Font.BOLD, 24));
+            g.setColor(Color.BLUE);
+            g.drawString("GAME OVER!", SCREEN_WIDTH/2 - 60, SCREEN_HEIGHT/2);
         }
     }
+
+
 
     public void generateApple() {
         appleX = (random.nextInt((int)SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
@@ -120,7 +157,7 @@ public class GamePanel extends JPanel implements KeyListener {
                 break;
         }
 
-        repaint();
+//        repaint();
     }
 
     void checkCollision() {
@@ -139,6 +176,17 @@ public class GamePanel extends JPanel implements KeyListener {
             if (x[0] == x[i] && y[0] == y[i]) {
                 gameOver();
             }
+        }
+
+        // Food collision
+        if (x[0] == appleX && y[0] == appleY) {
+
+            x[bodyParts] = x[bodyParts - 1];
+            y[bodyParts] = y[bodyParts - 1];
+
+            bodyParts++;
+
+            generateApple();
         }
     }
 
