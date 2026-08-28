@@ -13,6 +13,7 @@ public class GamePanel extends JPanel implements KeyListener {
     int appleX;
     int appleY;
     boolean running = false;
+    boolean paused = false;
     Random random;
     Timer timer;
     JButton restartButton;
@@ -92,7 +93,7 @@ public class GamePanel extends JPanel implements KeyListener {
 
     // DRAW FUNCTION FOR GRAPHICS ELEMENTS
     public void draw(Graphics g) {
-        if (running) {
+        if (!paused && running) {
             // GRID
 //            for (int i = 0; i <= UNIT_SIZE; i++) {
 //                g.drawLine(i * UNIT_SIZE, 0,
@@ -215,6 +216,14 @@ public class GamePanel extends JPanel implements KeyListener {
 
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
             direction = 'D';
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            if (running) {
+                paused = !paused;
+                repaint();
+            }
+            return;
         }
     }
 
